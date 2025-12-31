@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eternal Love Clock ❤️</title>
+
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
         }
 
         body {
@@ -37,7 +38,6 @@
             margin-bottom: 15px;
             color: #fff;
             text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-            padding: 0 10px;
         }
 
         .timer {
@@ -55,107 +55,102 @@
             flex: 1 1 calc(16% - 20px);
             text-align: center;
             font-size: 18px;
-            text-shadow: 2px 2px 4px black;
             font-weight: bold;
             color: #fff;
+            text-shadow: 2px 2px 4px black;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
         .time-box span {
             display: block;
-            font-size: clamp(12px, 2vw, 14px);
+            font-size: 14px;
             font-weight: normal;
             margin-top: 5px;
-            color: #fff;
         }
 
-        /* Responsive Adjustments */
         @media (max-width: 600px) {
-            .timer-container {
-                padding: 15px;
-            }
-            
             .time-box {
                 flex: 1 1 calc(33% - 20px);
                 font-size: 16px;
-                padding: 12px 8px;
-                min-width: 70px;
             }
         }
 
         @media (max-width: 480px) {
-            h1 {
-                font-size: 18px;
-                margin-bottom: 10px;
-            }
-            
             .time-box {
                 flex: 1 1 calc(50% - 10px);
                 font-size: 14px;
-                padding: 10px 5px;
-                min-width: 60px;
-            }
-
-            .time-box span {
-                font-size: 12px;
-            }
-        }
-
-        @media (max-width: 360px) {
-            .timer {
-                gap: 8px;
-            }
-            
-            .time-box {
-                flex: 1 1 calc(50% - 8px);
-                font-size: 13px;
             }
         }
     </style>
 </head>
+
 <body>
 
-    <div class="timer-container">
-        <h1>❤️ Eternal Love Since 23 Aug 2024 ❤️</h1>
-        <div class="timer">
-            <div class="time-box" id="years"><span>Years</span></div>
-            <div class="time-box" id="months"><span>Months</span></div>
-            <div class="time-box" id="days"><span>Days</span></div>
-            <div class="time-box" id="hours"><span>Hours</span></div>
-            <div class="time-box" id="minutes"><span>Minutes</span></div>
-            <div class="time-box" id="seconds"><span>Seconds</span></div>
-        </div>
+<div class="timer-container">
+    <h1>❤️ Eternal Love Since 23 Aug 2024 ❤️</h1>
+
+    <div class="timer">
+        <div class="time-box" id="years">0<span>Years</span></div>
+        <div class="time-box" id="months">0<span>Months</span></div>
+        <div class="time-box" id="days">0<span>Days</span></div>
+        <div class="time-box" id="hours">0<span>Hours</span></div>
+        <div class="time-box" id="minutes">0<span>Minutes</span></div>
+        <div class="time-box" id="seconds">0<span>Seconds</span></div>
     </div>
+</div>
 
-    <script>
-        function updateTimer() {
-            const startDate = new Date("August 23, 2024 23:43:00").getTime();
-            const now = new Date().getTime();
-            let diff = now - startDate; 
+<script>
+function updateTimer() {
+    const start = new Date(2024, 7, 23, 23, 43, 0); // 23 Aug 2024 11:43 PM
+    const now = new Date();
 
-            if (diff < 0) {
-                document.querySelector(".timer-container").innerHTML = "<h1>Wait for the special moment on 23 Aug 2024 ❤️</h1>";
-                return;
-            }
+    if (now < start) {
+        document.querySelector(".timer-container").innerHTML =
+            "<h1>Wait for the special moment on 23 Aug 2024 ❤️</h1>";
+        return;
+    }
 
-            let seconds = Math.floor(diff / 1000) % 60;
-            let minutes = Math.floor(diff / (1000 * 60)) % 60;
-            let hours = Math.floor(diff / (1000 * 60 * 60)) % 24;
-            let days = Math.floor(diff / (1000 * 60 * 60 * 24)) % 30;
-            let months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30)) % 12;
-            let years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365));
+    // ---- Calendar difference (Y/M/D) ----
+    let years = now.getFullYear() - start.getFullYear();
+    let months = now.getMonth() - start.getMonth();
+    let days = now.getDate() - start.getDate();
 
-            document.getElementById("years").innerHTML = years + "<span>Years</span>";
-            document.getElementById("months").innerHTML = months + "<span>Months</span>";
-            document.getElementById("days").innerHTML = days + "<span>Days</span>";
-            document.getElementById("hours").innerHTML = hours + "<span>Hours</span>";
-            document.getElementById("minutes").innerHTML = minutes + "<span>Minutes</span>";
-            document.getElementById("seconds").innerHTML = seconds + "<span>Seconds</span>";
-        }
+    if (days < 0) {
+        months--;
+        const prevMonthDays = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            0
+        ).getDate();
+        days += prevMonthDays;
+    }
 
-        setInterval(updateTimer, 1000);
-        updateTimer();
-    </script>
+    if (months < 0) {
+        years--;
+        months += 12;
+    }
+
+    // ---- Time difference (H/M/S) ----
+    const totalMs = now.getTime() - start.getTime();
+    const totalSeconds = Math.floor(totalMs / 1000);
+
+    const seconds = totalSeconds % 60;
+    const minutes = Math.floor(totalSeconds / 60) % 60;
+    const hours = Math.floor(totalSeconds / 3600) % 24;
+
+    // ---- Render ----
+    document.getElementById("years").innerHTML = years + "<span>Years</span>";
+    document.getElementById("months").innerHTML = months + "<span>Months</span>";
+    document.getElementById("days").innerHTML = days + "<span>Days</span>";
+    document.getElementById("hours").innerHTML = hours + "<span>Hours</span>";
+    document.getElementById("minutes").innerHTML = minutes + "<span>Minutes</span>";
+    document.getElementById("seconds").innerHTML = seconds + "<span>Seconds</span>";
+}
+
+setInterval(updateTimer, 1000);
+updateTimer();
+</script>
+
 
 </body>
 </html>
